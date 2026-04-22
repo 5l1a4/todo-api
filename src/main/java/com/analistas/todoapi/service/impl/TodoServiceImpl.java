@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TodoServiceImpl implements TodoServiceI {
+
+    public static final String ERROR_MESAGE = "Entidad no Encontrada";
 
     private final TodoRepository todoRepository;
 
@@ -36,7 +37,7 @@ public class TodoServiceImpl implements TodoServiceI {
 
     @Override
     public TodoResponse findById(Long id) {
-        Todo todo = todoRepository.findById(id).orElseThrow(() -> new RuntimeException("Entidad no Encontrada"));
+        Todo todo = todoRepository.findById(id).orElseThrow(() -> new RuntimeException(ERROR_MESAGE));
         TodoResponse response = todoMapper.toResponse(todo);
         return response;
     }
@@ -50,7 +51,7 @@ public class TodoServiceImpl implements TodoServiceI {
 
     @Override
     public TodoResponse update(TodoRequest request, Long id) {
-        Todo todo = todoRepository.findById(id).orElseThrow(() -> new RuntimeException("Entidad no Encontrada"));
+        Todo todo = todoRepository.findById(id).orElseThrow(() -> new RuntimeException(ERROR_MESAGE));
         todo.setTitle(request.getTitle());
         todo.setDescription(request.getDescription());
         todo.setDueDate(request.getDueDate());
@@ -61,7 +62,7 @@ public class TodoServiceImpl implements TodoServiceI {
 
     @Override
     public void deleteById(Long id) {
-        todoRepository.findById(id).orElseThrow(() -> new RuntimeException("Entidad no Encontrada"));
+        todoRepository.findById(id).orElseThrow(() -> new RuntimeException(ERROR_MESAGE));
         todoRepository.deleteById(id);
     }
 

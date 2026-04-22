@@ -3,6 +3,7 @@ package com.analistas.todoapi.controller;
 import com.analistas.todoapi.domain.dto.TodoRequest;
 import com.analistas.todoapi.domain.dto.TodoResponse;
 import com.analistas.todoapi.service.TodoServiceI;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +18,9 @@ public class TodoController {
 
     public TodoController(TodoServiceI todoService){
         this.todoService = todoService;
-
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<TodoResponse>> getTodos(){
         return ResponseEntity.ok(todoService.findAll());
     }
@@ -30,19 +30,19 @@ public class TodoController {
         return ResponseEntity.ok(todoService.findById(id));
     }
 
-    @PutMapping("/created")
-    public ResponseEntity<HttpStatus> createTodo(TodoRequest todoRequest){
-        todoService.save(todoRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<TodoResponse> createTodo(@RequestBody @Valid TodoRequest todoRequest){
+        return new ResponseEntity<>(todoService.save(todoRequest), HttpStatus.CREATED);
     }
 
-    @PostMapping("/updated/{id}")
-    public ResponseEntity<TodoResponse> updateTodo(@PathVariable Long id, TodoRequest todoRequest){
+    @PutMapping("/{id}")
+    public ResponseEntity<TodoResponse> updateTodo(@PathVariable Long id, @RequestBody @Valid TodoRequest todoRequest){
         return ResponseEntity.ok(todoService.update(todoRequest, id));
     }
 
-    @DeleteMapping("/removed/{id}")
-    public ResponseEntity<String>(@PathVariable Long id){
-        return ResponseEntity<"buenNivel">.ok
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTodo(@PathVariable Long id){
+        todoService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
