@@ -11,15 +11,15 @@ REST API para gestión de tareas pendientes, desarrollada con Spring Boot.
 - Maven
 
 ## Endpoints
-| Método | URL                      | Descripción                       |
-|--------|--------------------------|-----------------------------------|
-| GET    | /api/todos               | Listar todas las tareas           |
-| GET    | /api/todos/{id}          | Obtener tarea por ID              |
-| GET    | /api/todos/complete      | Listar todas las tares terminadas |
-| POST   | /api/todos               | Crear tarea                       |
-| PUT    | /api/todos/{id}          | Actualizar tarea                  |
-| DELETE | /api/todos/{id}          | Eliminar tarea                    |
-| PATCH  | /api/todos/{id}/complete | Marcar tarea como terminada       |
+| Método | URL                      | Descripción                        |
+|--------|--------------------------|------------------------------------|
+| GET    | /api/todos               | Listar todas las tareas            |
+| GET    | /api/todos/{id}          | Obtener tarea por ID               |
+| GET    | /api/todos/complete      | Listar todas las tareas terminadas |
+| POST   | /api/todos               | Crear tarea                        |
+| PUT    | /api/todos/{id}          | Actualizar tarea                   |
+| DELETE | /api/todos/{id}          | Eliminar tarea                     |
+| PATCH  | /api/todos/{id}/complete | Marcar tarea como terminada        |
 
 ## Cómo ejecutar
 1. Clonar el repositorio
