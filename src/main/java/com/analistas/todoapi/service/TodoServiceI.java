@@ -15,6 +15,10 @@ public interface TodoServiceI {
 
     TodoResponse update(TodoRequest todoRequest, Long id);
 
+    TodoResponse statusTrue(Long id);
+
     void deleteById(Long id);
+
+    List<TodoResponse> findAllByStatusIsTrue();
 
 }

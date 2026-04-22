@@ -4,6 +4,7 @@ import com.analistas.todoapi.domain.dto.TodoRequest;
 import com.analistas.todoapi.domain.dto.TodoResponse;
 import com.analistas.todoapi.domain.entity.Todo;
 import com.analistas.todoapi.domain.mapper.TodoMapper;
+import com.analistas.todoapi.exception.ResourceNotFoundException;
 import com.analistas.todoapi.repository.TodoRepository;
 import com.analistas.todoapi.service.TodoServiceI;
 import org.springframework.stereotype.Service;
@@ -14,13 +15,11 @@ import java.util.List;
 @Service
 public class TodoServiceImpl implements TodoServiceI {
 
-    public static final String ERROR_MESAGE = "Entidad no Encontrada";
-
     private final TodoRepository todoRepository;
 
     private final TodoMapper todoMapper;
 
-    public TodoServiceImpl(TodoRepository todoRepository,  TodoMapper todoMapper) {
+    public TodoServiceImpl(TodoRepository todoRepository, TodoMapper todoMapper) {
         this.todoRepository = todoRepository;
         this.todoMapper = todoMapper;
     }
@@ -35,9 +34,20 @@ public class TodoServiceImpl implements TodoServiceI {
         return todoResponses;
     }
 
+    //futura implementación.
+    @Override
+    public List<TodoResponse> findAllByStatusIsTrue() {
+        List<TodoResponse> todoResponses = new ArrayList<>();
+        List<Todo> todos = todoRepository.findAllByStatusIsTrue();
+        for (Todo todo: todos){
+            todoResponses.add(todoMapper.toResponse(todo));
+        }
+        return todoResponses;
+    }
+
     @Override
     public TodoResponse findById(Long id) {
-        Todo todo = todoRepository.findById(id).orElseThrow(() -> new RuntimeException(ERROR_MESAGE));
+        Todo todo = todoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageError(id)));
         TodoResponse response = todoMapper.toResponse(todo);
         return response;
     }
@@ -51,7 +61,7 @@ public class TodoServiceImpl implements TodoServiceI {
 
     @Override
     public TodoResponse update(TodoRequest request, Long id) {
-        Todo todo = todoRepository.findById(id).orElseThrow(() -> new RuntimeException(ERROR_MESAGE));
+        Todo todo = todoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageError(id)));
         todo.setTitle(request.getTitle());
         todo.setDescription(request.getDescription());
         todo.setDueDate(request.getDueDate());
@@ -61,9 +71,24 @@ public class TodoServiceImpl implements TodoServiceI {
     }
 
     @Override
+    public TodoResponse statusTrue(Long id) {
+        Todo todo = todoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageError(id)));
+        todo.setStatus(true);
+        todoRepository.save(todo);
+        TodoResponse response = todoMapper.toResponse(todo);
+        return response;
+    }
+
+    @Override
     public void deleteById(Long id) {
-        todoRepository.findById(id).orElseThrow(() -> new RuntimeException(ERROR_MESAGE));
+        todoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageError(id)));
         todoRepository.deleteById(id);
+    }
+
+
+
+    private String messageError(Long id) {
+        return "Todo con el id " + id + " no encontrado";
     }
 
 }

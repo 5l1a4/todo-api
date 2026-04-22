@@ -25,6 +25,11 @@ public class TodoController {
         return ResponseEntity.ok(todoService.findAll());
     }
 
+    @GetMapping("/completed")
+    public ResponseEntity<List<TodoResponse>> getCompletedTodos(){
+        return ResponseEntity.ok(todoService.findAllByStatusIsTrue());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TodoResponse> getTodoById(@PathVariable Long id){
         return ResponseEntity.ok(todoService.findById(id));
@@ -44,5 +49,10 @@ public class TodoController {
     public ResponseEntity<Void> deleteTodo(@PathVariable Long id){
         todoService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/{id}/complete")
+    public ResponseEntity<TodoResponse> completeTodo(@PathVariable Long id){
+        return new ResponseEntity<>(todoService.statusTrue(id),HttpStatus.OK);
     }
 }
